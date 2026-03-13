@@ -3,26 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clicking Game</title>
+    <title>Colorful Clicking Game</title>
     <style>
-        body {text-align: center; margin-top: 50px;}
-        button {font-size: 24px; padding: 10px 20px;}
-        #score {font-size: 24px; margin-top: 20px;}
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f39c12, #8e44ad);
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+        #click-area {
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
-    <h1>Clicking Game</h1>
-    <button id="clickButton">Click me!</button>
-    <div id="score">Score: 0</div>
+    <div id="click-area">Click Me!</div>
     <script>
+        const clickArea = document.getElementById('click-area');
         let score = 0;
-        const button = document.getElementById('clickButton');
-        const scoreDisplay = document.getElementById('score');
 
-        button.addEventListener('click', () => {
+        clickArea.addEventListener('click', function(e) {
             score++;
-            scoreDisplay.innerText = `Score: ${score}`;
+            createParticle(e);
+            playSound();
+            clickArea.innerText = `Score: ${score}`;
         });
+
+        function createParticle(e) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.width = `${Math.random() * 20 + 5}px`;
+            particle.style.height = particle.style.width;
+            particle.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            particle.style.left = `${e.clientX - clickArea.getBoundingClientRect().left}px`;
+            particle.style.top = `${e.clientY - clickArea.getBoundingClientRect().top}px`;
+
+            clickArea.appendChild(particle);
+            setTimeout(() => particle.remove(), 1000);
+        }
+
+        function playSound() {
+            const audio = new Audio('click-sound.mp3'); // Replace with a valid sound file path
+            audio.play();
+        }
     </script>
 </body>
 </html>
